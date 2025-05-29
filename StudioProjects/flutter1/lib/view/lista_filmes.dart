@@ -16,11 +16,8 @@ class _ListaFilmesState extends State<ListaFilmes> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    setState(() {
-      _filmes = _filmesController.getFilmes();
-    });
+    _filmes = _filmesController.getFilmes();
   }
 
   @override
@@ -32,17 +29,16 @@ class _ListaFilmesState extends State<ListaFilmes> {
       body: ListView.builder(
         itemCount: _filmes.length,
         itemBuilder: (context, index) {
-          return buildItemList(index);
+          return _buildCard(index);
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
+        onPressed: () async {
+          await Navigator.push(context, MaterialPageRoute(builder: (context) {
             return const CadastrarFilmes();
-          })).then((value) {
-            setState(() {
-              _filmes = _filmesController.getFilmes();
-            });
+          }));
+          setState(() {
+            _filmes = _filmesController.getFilmes();
           });
         },
         child: const Icon(Icons.add),
@@ -50,12 +46,35 @@ class _ListaFilmesState extends State<ListaFilmes> {
     );
   }
 
-  Widget buildItemList(index) {
-    return ListTile(
-      leading: const Icon(Icons.person),
-      title: Text(_filmes[index].url),
-      subtitle: Text(_filmes[index].duracao),
-      trailing: const Icon(Icons.delete),
+  Widget _buildCard(int index) {
+    return Card(
+      margin: const EdgeInsets.all(8.0),
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: ListTile(
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.network(
+            _filmes[index].url,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+          ),
+        ),
+        title: Text(
+          _filmes[index].titulo,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text("${_filmes[index].genero} • ${_filmes[index].duracao}"),
+        trailing: const Icon(Icons.star, color: Colors.amber),
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return CadastrarFilmes();
+          }));
+        },
+      ),
     );
   }
 }
