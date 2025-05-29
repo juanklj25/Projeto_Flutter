@@ -11,4 +11,7 @@ class FilmesController{
   void adicionar(String url, String titulo,String genero,int faixa_etaria,String duracao,int pontuacao,String descricao,int ano){
     _service.adicionar(Filmes(url: url,titulo: titulo,genero: genero,faixa_etaria:faixa_etaria,duracao: duracao,pontuacao: pontuacao,descricao: descricao,ano: ano));
   }
+  void removerFilme(Filmes filme) {
+    _service.filmes.removeWhere((f) => f.titulo == filme.titulo);
+  }
 }

@@ -24,12 +24,35 @@ class _ListaFilmesState extends State<ListaFilmes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Listar Filmes"),
+        backgroundColor: Colors.blue,
+        title: const Text("Listar Filmes",
+      ),
       ),
       body: ListView.builder(
         itemCount: _filmes.length,
         itemBuilder: (context, index) {
-          return _buildCard(index);
+          return Dismissible(
+            key: Key(_filmes[index].titulo),
+            direction: DismissDirection.endToStart,
+            background: Container(
+              color: Colors.red,
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: const Icon(Icons.delete, color: Colors.white),
+            ),
+            onDismissed: (direction) {
+              final filmeRemovido = _filmes[index];
+
+              setState(() {
+                _filmes.removeAt(index);
+              });
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("${filmeRemovido.titulo} foi removido")),
+              );
+            },
+            child: _buildCard(index),
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -49,7 +72,7 @@ class _ListaFilmesState extends State<ListaFilmes> {
   Widget _buildCard(int index) {
     return Card(
       margin: const EdgeInsets.all(8.0),
-      elevation: 4,
+      elevation: 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
