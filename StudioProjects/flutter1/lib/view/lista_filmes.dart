@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter1/model/filmes.dart';
 import 'package:flutter1/controller/filmes_controller.dart';
 import 'package:flutter1/view/cadastro_filmes.dart';
+import 'package:flutter1/controller/controlle_api_filme.dart';
 
 class ListaFilmes extends StatefulWidget {
   const ListaFilmes({super.key});
@@ -12,13 +13,10 @@ class ListaFilmes extends StatefulWidget {
 
 class _ListaFilmesState extends State<ListaFilmes> {
   final _filmesController = FilmesController();
+
   List<Filmes> _filmes = [];
 
-  @override
-  void initState() {
-    super.initState();
-    _filmes = _filmesController.getFilmes();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -28,34 +26,49 @@ class _ListaFilmesState extends State<ListaFilmes> {
         title: const Text("Listar Filmes",
       ),
       ),
-      body: ListView.builder(
-        itemCount: _filmes.length,
-        itemBuilder: (context, index) {
-          return Dismissible(
-            key: Key(_filmes[index].titulo),
-            direction: DismissDirection.endToStart,
-            background: Container(
-              color: Colors.red,
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: const Icon(Icons.delete, color: Colors.white),
-            ),
-            onDismissed: (direction) {
-              final filmeRemovido = _filmes[index];
-
-              setState(() {
-                _filmes.removeAt(index);
-              });
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("${filmeRemovido.titulo} foi removido")),
+      body: FutureBuilder(
+          future: FilmeApiController().findAll(),
+          builder: (context, snapshot){
+              if(snapshot.hasData){
+              final filmes = snapshot.data;
+              return ListView.builder(
+                itemCount: _filmes.length,
+                itemBuilder: (context, index) {
+                  return Dismissible(
+                    key: Key(_filmes[index].titulo),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: const Icon(Icons.delete, color: Colors.white),
+                    ),
+                    onDismissed: (direction) {
+                      final filmeRemovido = _filmes[index];
+                      setState(() {
+                        _filmesController.removerFilme(filmeRemovido);
+                        _filmes = List.from(_filmesController.getFilmes());
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("${filmeRemovido.titulo} foi removido")),
+                      );
+                    },
+                    child: _buildCard(index),
+                  );
+                },
               );
-            },
-            child: _buildCard(index),
-          );
-        },
+              }else if(snapshot.hasError){
+                return Center(
+                  child: Text("Error: ${snapshot.error}"),
+                );
+              }else{
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+          }
       ),
-      floatingActionButton: FloatingActionButton(
+    floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await Navigator.push(context, MaterialPageRoute(builder: (context) {
             return const CadastrarFilmes();

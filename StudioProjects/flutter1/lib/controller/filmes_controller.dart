@@ -4,14 +4,13 @@ import 'package:flutter1/model/filmes.dart';
 class FilmesController{
   final _service = FilmesService();
 
-  List<Filmes> getFilmes(){
-    return _service.filmes;
+  Future<List<Filmes>?> findAll() async{
+    return await _service.findAll();
   }
 
-  void adicionar(String url, String titulo,String genero,int faixa_etaria,String duracao,int pontuacao,String descricao,int ano){
-    _service.adicionar(Filmes(url: url,titulo: titulo,genero: genero,faixa_etaria:faixa_etaria,duracao: duracao,pontuacao: pontuacao,descricao: descricao,ano: ano));
-  }
-  void removerFilme(Filmes filme) {
-    _service.filmes.removeWhere((f) => f.titulo == filme.titulo);
+  Future<int?> save(String url, String titulo,String genero,int faixa_etaria,String duracao,int pontuacao,String descricao,int ano) async{
+    return await _service.save(Filmes(url: url, titulo: titulo, genero: genero, faixa_etaria: faixa_etaria, duracao: duracao, pontuacao: pontuacao, descricao: descricao, ano: ano));
   }
 }
+
+

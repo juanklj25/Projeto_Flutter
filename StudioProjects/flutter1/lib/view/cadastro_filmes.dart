@@ -49,24 +49,26 @@ class _CadastrarFilmesState extends State<CadastrarFilmes> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if (!_key.currentState!.validate()) return;
+          final valid = _key.currentState!.validate();
+          if (valid) {
+            return;
+          }
+            _filmesController.save(
+              _edtUrl.text,
+              _edtTitulo.text,
+              _edtGenero.text,
+              int.tryParse(_faixaEtariaSelecionada) ?? 0,
+              _edtDuracao.text,
+              _pontuacao.toInt(),
+              _edtDescricao.text,
+              int.tryParse(_edtAno.text) ?? 0,
+            );
 
-          _filmesController.adicionar(
-            _edtUrl.text,
-            _edtTitulo.text,
-            _edtGenero.text,
-            int.tryParse(_faixaEtariaSelecionada) ?? 0,
-            _edtDuracao.text,
-            _pontuacao.toInt(),
-            _edtDescricao.text,
-            int.tryParse(_edtAno.text) ?? 0,
-          );
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Filme cadastrado com sucesso!")),
-          );
-          Navigator.pop(context);
-        },
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Filme cadastrado com sucesso!")),
+            );
+            Navigator.pop(context);
+          },
         child: const Icon(Icons.save),
       ),
     );
