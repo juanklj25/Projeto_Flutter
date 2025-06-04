@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter1/view/lista_filmes.dart';
 
 void main() {
   runApp(const MyApp());

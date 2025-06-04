@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
-import 'package:flutter1/controller/filmes_controller.dart';
 
 class CadastrarFilmes extends StatefulWidget {
   const CadastrarFilmes({super.key});
@@ -17,7 +16,6 @@ class _CadastrarFilmesState extends State<CadastrarFilmes> {
   final _edtDuracao = TextEditingController();
   final _edtDescricao = TextEditingController();
   final _edtAno = TextEditingController();
-  final _filmesController = FilmesController();
 
   double _pontuacao = 0;
   String _faixaEtariaSelecionada = "Livre";
@@ -53,17 +51,6 @@ class _CadastrarFilmesState extends State<CadastrarFilmes> {
           if (valid) {
             return;
           }
-            _filmesController.save(
-              _edtUrl.text,
-              _edtTitulo.text,
-              _edtGenero.text,
-              int.tryParse(_faixaEtariaSelecionada) ?? 0,
-              _edtDuracao.text,
-              _pontuacao.toInt(),
-              _edtDescricao.text,
-              int.tryParse(_edtAno.text) ?? 0,
-            );
-
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("Filme cadastrado com sucesso!")),
             );

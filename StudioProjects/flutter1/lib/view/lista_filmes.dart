@@ -16,8 +16,6 @@ class _ListaFilmesState extends State<ListaFilmes> {
 
   List<Filmes> _filmes = [];
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
