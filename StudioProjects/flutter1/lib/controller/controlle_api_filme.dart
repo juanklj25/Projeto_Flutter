@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter1/config/filme_api.dart';
 import 'package:flutter1/model/filmes.dart';
 import 'package:http/http.dart' as http;
-
+"Adiciona a classe FilmeApiController para buscar filmes da API"
 class FilmeApiController{
 
   Future<List<Filmes>> findAll() async{
